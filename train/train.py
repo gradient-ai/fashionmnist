@@ -6,14 +6,8 @@ import argparse
 
 tf.logging.set_verbosity(tf.logging.ERROR)
 
-#Parse input parameters
-parser = argparse.ArgumentParser(description='Fashion MNIST Keras Model')
-parser.add_argument('--modelPath', type=str, dest='MODEL_DIR', help='location to store the model artifacts')
-parser.add_argument('--version', type=str, dest='VERSION', default="1", help='model version')
-args = parser.parse_args()
-
-MODEL_DIR = args.MODEL_DIR
-VERSION = args.VERSION
+#Input parameters
+MODEL_DIR = os.path.abspath(os.environ.get('MODEL_DIR', os.getcwd() + '/models'))
 
 #Download Fashion MNIST dataset and split it for train and test
 fashion_mnist = keras.datasets.fashion_mnist
@@ -51,18 +45,13 @@ test_loss, test_acc = model.evaluate(test_images, test_labels)
 print('\nModel accuracy: {}'.format(test_acc))
 
 #Save model 
-if not os.path.exists(MODEL_DIR):
-    os.makedirs(MODEL_DIR)
-    export_path = os.path.join(MODEL_DIR, VERSION)
-    print('export_path = {}\n'.format(export_path))
+export_path = os.path.join(MODEL_DIR)
+print('export_path = {}\n'.format(export_path))
 
-    tf.saved_model.simple_save(
-        keras.backend.get_session(),
-        export_path,
-        inputs={'input_image': model.input},
-        outputs={t.name:t for t in model.outputs})
+tf.saved_model.simple_save(
+   keras.backend.get_session(),
+   export_path,
+   inputs={'input_image': model.input},
+   outputs={t.name:t for t in model.outputs})
 
-    print('\nModel saved to ' + MODEL_DIR)
-else:
-    print('\nExisting model found at ' + MODEL_DIR)
-    print('\nDid not overwrite old model. Run the job again with a different location to store the model')
+print('\nModel saved to ' + MODEL_DIR)
