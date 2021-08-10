@@ -3,27 +3,29 @@ defaults:
     apiKey: secret:api_key #Replace this secret with your own secret
   resources:
     instance-type: C5
+
 jobs:
+
   CloneRepo:
-    inputs:
+    outputs:
       repo:
         type: volume
     uses: git-checkout@v1
     with:
       url: https://github.com/gradient-ai/fashionmnist.git
+
   TrainModel:
     env:
       MODEL_DIR: /my-trained-model
     needs:
       - CloneRepo
     inputs:
-      repo:
-        type: volume
+      repo: CloneRepo.outputs.repo
     outputs:
       trained-model:
         type: dataset
         with:
-          ref: demo-dataset #Replace this id with your own dataset id
+          ref: demo-dataset #Create dataset named "demo-dataset", or replace this id with your own dataset id
     uses: container@v1
     with:
       args:
@@ -32,6 +34,7 @@ jobs:
         - >-
           cd /inputs/repo/train && python train.py && cp -R /my-trained-model /outputs/trained-model
       image: 'tensorflow/tensorflow:1.9.0'
+
   UploadModel:
     inputs:
       model: TrainModel.outputs.trained-model
