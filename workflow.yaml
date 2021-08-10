@@ -1,6 +1,6 @@
 defaults:
   env:
-    apiKey: secret:api_key #Replace this secret with your own secret
+    apiKey: secret:api_key # Replace this secret with your own secret
   resources:
     instance-type: C5
 jobs:
@@ -23,7 +23,7 @@ jobs:
       trained-model:
         type: dataset
         with:
-          id: dsrvw1m30ymhiyt #Replace this id with your own dataset id
+          ref: demo-dataset # Replace this id with your own dataset id
     uses: container@v1
     with:
       args:
