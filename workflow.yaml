@@ -1,8 +1,8 @@
 defaults:
   env:
-    apiKey: secret:api_key #Replace this secret with your own secret
+    apiKey: secret:api_key # Replace this secret with your own secret
   resources:
-    instance-type: C5
+    instance-type: C3
 
 jobs:
 
@@ -25,7 +25,7 @@ jobs:
       trained-model:
         type: dataset
         with:
-          ref: demo-dataset #Create dataset named "demo-dataset", or replace this id with your own dataset id
+          ref: demo-dataset # Make sure you have a dataset named "demo-dataset", or replace this id with your own dataset id
     uses: container@v1
     with:
       args:
